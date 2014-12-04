@@ -8,6 +8,12 @@
    return Math.sin(t * note(n) * Math.PI);
  }
  
+ export function simDetune(synth, detune) {
+   return function(t, n) {
+     return synth(t, n) * 0.8 + synth(t+0.1, n+detune) * 0.2;
+   }
+ }
+ 
  export function square(t, n) {
    var sineVal = sine(t, n);
    if (sineVal >= 0) return 1
