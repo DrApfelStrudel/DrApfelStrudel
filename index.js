@@ -37,12 +37,23 @@
   var synth = syn;
   var vol = volume || 0;
   var note = not || 0;
+  var attack = 0.01;
+  var release = 0.5;
+  var length = end - start;
   
   function play(t) {
     var shouldPlay = start <= t && t <= end;
     if (!shouldPlay || !synth) return 0;
-    
-    return synth(t, note) * vol; 
+    var currentTime = t - start;
+    var currentAttack = attack === 0 ? 1 :
+                        (currentTime <= attack ?
+                        currentTime/attack
+                        : 1);
+    var currentRelease = currentTime === 0 ? 1 :
+                         (currentTime >= length ?
+                         1 - (1/release)*(currentTime-length) : 1)
+                        
+    return currentRelease * currentAttack * synth(currentTime, note) * vol; 
   }
   
   function getStart() {
@@ -50,7 +61,7 @@
   }
   
   function getEnd() {
-    return end;
+    return end + release;
   }
   
   function setSynth(syn) {

@@ -43,8 +43,8 @@ for (var i = 0; i < leadNodes.length; i++) {
 }
 
 t1.addSounds(synthSounds);
-t1.addSounds(bassSounds);
-t1.addSounds(leadSounds);
+//t1.addSounds(bassSounds);
+//t1.addSounds(leadSounds);
 
 
 export function dsp(t) {
