@@ -8,6 +8,12 @@
    return Math.sin(t * note(n) * Math.PI);
  }
  
+ export function harmonic(synth) {
+   return function(t, n) {
+     return synth(t, n) * 0.6 + synth(t, n+12) * 0.4; 
+   }
+ }
+ 
  export function simDetune(synth, detune) {
    return function(t, n) {
      return synth(t, n) * 0.8 + synth(t+0.1, n+detune) * 0.2;
@@ -63,8 +69,7 @@
 export function Track() {
   var mainVol = 1;
   var sounds = [];
-  var speed = 1;
-  
+
   function addSounds(sounds) {
     for (var i = 0; i < sounds.length; i++) {
       addSound(sounds[i]);
@@ -81,10 +86,9 @@ export function Track() {
       }
     }
   }
-  
+
   function play(t) {
     var timeSound = sounds[Math.floor(t*4)];
-    var t = t * speed;
     if (timeSound) {
       var sum = 0;
       for (var i = 0; i < timeSound.length; i++) {
@@ -97,13 +101,8 @@ export function Track() {
     }
   }
   
-  function setSpeed(s) {
-    speed = s;
-  }
-  
   this.play = play;
   this.addSounds = addSounds;
-  this.setSpeed = setSpeed;
 }
 
 function note(n) {
