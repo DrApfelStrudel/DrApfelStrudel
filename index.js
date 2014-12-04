@@ -8,9 +8,16 @@
    return Math.sin(t * note(n) * Math.PI);
  }
  
+ export function vibrato(synth, str, speed) {
+   return function(t, n) {
+     var vib = Math.sin(t * Math.PI * speed) * str;
+     return synth(t, n + vib);
+   }
+ }
+ 
  export function harmonic(synth) {
    return function(t, n) {
-     return synth(t, n) * 0.6 + synth(t, n+12) * 0.4; 
+     return synth(t, n) * 0.7 + synth(t, n+12) * 0.2 + synth(t, n+24) * 0.1; 
    }
  }
  
