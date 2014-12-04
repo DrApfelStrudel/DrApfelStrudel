@@ -66,7 +66,7 @@ export function Track() {
   }
   
   function addSound(sound) {
-    for (var i = Math.floor(sound.getStart()); i < sound.getEnd(); i++) {
+    for (var i = Math.floor(sound.getStart()); i < sound.getEnd()*4; i++) {
       if (sounds[i]) {
         sounds[i].push(sound);
       }
@@ -77,7 +77,7 @@ export function Track() {
   }
   
   function play(t) {
-    var timeSound = sounds[Math.floor(t)];
+    var timeSound = sounds[Math.floor(t*4)];
     var t = t * speed;
     if (timeSound) {
       var sum = 0;
