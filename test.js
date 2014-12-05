@@ -29,6 +29,7 @@ var leadSounds = [];
 for (var i = 0; i < synthNodes.length; i++) {
   if (synthNodes[i] === undefined) continue;
   var s = new Sound(i/8, i/8 + 0.125, harmonic(simDetune(square,0.15)), synthNodes[i]+4, 0.2);
+  s.setRelease(0.2);
   synthSounds.push(s);
 }
 
@@ -44,16 +45,10 @@ for (var i = 0; i < leadNodes.length; i++) {
 
 t1.addSounds(synthSounds);
 t1.addSounds(bassSounds);
-t1.addSounds(leadSounds);
-t1.addSounds(leadSounds);
-
-var toPlay = [];
-
-for (var i = 0; i < 4000; i++) {
-  toPlay[i] = t1.play(i);
-}
+//t1.addSounds(leadSounds);
 
 export function dsp(t) {
-  var newT = Math.round(t*10000);
-  return toPlay[newT];
+
+  var what = parseFloat((t%4).toFixed(5));
+  return t1.play(what);
 }

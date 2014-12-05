@@ -37,8 +37,8 @@
   var synth = syn;
   var vol = volume || 0;
   var note = not || 0;
-  var attack = 0.01;
-  var release = 0.7;
+  var attack = 0;
+  var release = 0;
   var length = end - start;
   
   function play(t) {
@@ -49,7 +49,8 @@
                         (currentTime <= attack ?
                         currentTime/attack
                         : 1);
-    var currentRelease = currentTime === 0 ? 1 :
+    var currentRelease = release === 0 ? 1 :
+                         currentTime === 0 ? 1 :
                          (currentTime >= length ?
                          1 - (1/release)*(currentTime-length) : 1);
                         
@@ -68,6 +69,16 @@
     synth = syn;
   }
   
+  function setAttack(t) {
+    attack = t;
+  }
+  
+  /* How many time units after the key release 
+     the key should ring for */
+  function setRelease(t) {
+    release = t;
+  }
+  
   function setNote(n) {
     note = n;
   }
@@ -82,6 +93,8 @@
   this.getEnd = getEnd;
   this.setSynth = setSynth;
   this.setNote = setNote;
+  this.setAttack = setAttack;
+  this.setRelease = setRelease;
 }
  
 export function Track() {
@@ -107,15 +120,18 @@ export function Track() {
   }
 
   function play(t) {
+    if(save[t] !== undefined) return save[t];
     var timeSound = sounds[Math.floor(t*4)];
     if (timeSound) {
       var sum = 0;
       for (var i = 0; i < timeSound.length; i++) {
         sum += timeSound[i].play(t);
       }
+      save[t] = sum * mainVol;
       return sum * mainVol;
     }
     else {
+      save[t] = 0;
       return 0;
     }
   }
