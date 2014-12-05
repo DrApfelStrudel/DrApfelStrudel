@@ -8,6 +8,12 @@
    return Math.sin(t * note(n) * Math.PI);
  }
  
+ export function square(t, n) {
+   var sineVal = sine(t, n);
+   if (sineVal >= 0) return 1;
+   return -1;
+ }
+ 
  export function vibrato(synth, str, speed) {
    return function(t, n) {
      var vib = Math.sin(t * Math.PI * speed) * str;
@@ -27,10 +33,11 @@
    }
  }
  
- export function square(t, n) {
-   var sineVal = sine(t, n);
-   if (sineVal >= 0) return 1;
-   return -1;
+ export function Organ(start, end, not, volume) {
+   var sound = new Sound(start, end, simDetune(harmonic(sine),0.1), not, volume);
+   sound.setAttack(0.05);
+   sound.setRelease(0.3);
+   return sound;
  }
  
  export function Sound(start, end, syn, not, volume) {
@@ -97,11 +104,17 @@
   this.setRelease = setRelease;
 }
  
-export function Track() {
+export function Track(length) {
   var mainVol = 1;
   var sounds = [];
   var save = [];
 
+  /* In the current state of the module, do NOT 
+     add a sound until it has been totally configured!
+     I haven't made any 'stabilizing' methods that sets
+     length of different sounds after they have been added,
+     so changing a sound after adding will not work as 
+     expected. */
   function addSounds(sounds) {
     for (var i = 0; i < sounds.length; i++) {
       addSound(sounds[i]);
@@ -118,8 +131,15 @@ export function Track() {
       }
     }
   }
+  
+  function initializeMusic() {
+    for(var t = 0; t < length; t += 0.0001) {
+      save[t] = play(t);
+    }
+  }
 
   function play(t) {
+    t = parseFloat((t%length).toFixed(6));
     if(save[t] !== undefined) return save[t];
     var timeSound = sounds[Math.floor(t*4)];
     if (timeSound) {
@@ -138,6 +158,7 @@ export function Track() {
   
   this.play = play;
   this.addSounds = addSounds;
+  this.initializeMusic = initializeMusic;
 }
 
 function note(n) {
