@@ -29,7 +29,7 @@
  
  export function square(t, n) {
    var sineVal = sine(t, n);
-   if (sineVal >= 0) return 1
+   if (sineVal >= 0) return 1;
    return -1;
  }
  
@@ -38,11 +38,11 @@
   var vol = volume || 0;
   var note = not || 0;
   var attack = 0.01;
-  var release = 0.5;
+  var release = 0.7;
   var length = end - start;
   
   function play(t) {
-    var shouldPlay = start <= t && t <= end;
+    var shouldPlay = start <= t && t <= end + release;
     if (!shouldPlay || !synth) return 0;
     var currentTime = t - start;
     var currentAttack = attack === 0 ? 1 :
@@ -51,7 +51,7 @@
                         : 1);
     var currentRelease = currentTime === 0 ? 1 :
                          (currentTime >= length ?
-                         1 - (1/release)*(currentTime-length) : 1)
+                         1 - (1/release)*(currentTime-length) : 1);
                         
     return currentRelease * currentAttack * synth(currentTime, note) * vol; 
   }
@@ -87,6 +87,7 @@
 export function Track() {
   var mainVol = 1;
   var sounds = [];
+  var save = [];
 
   function addSounds(sounds) {
     for (var i = 0; i < sounds.length; i++) {
