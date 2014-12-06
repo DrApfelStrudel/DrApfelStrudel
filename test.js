@@ -37,7 +37,6 @@ for(var i = 0; i < 8; i += 0.5) {
     Track1 needs a bit loading time
 */
 export function dsp(t) {
-  
   return t1.play(t);
 }
 
@@ -72,7 +71,7 @@ function Track1() {
   for (var i = 0; i < bassNodes.length; i++) {
     var s = new Sound(i/8, i/8 + 0.125, simDetune(square,0.1), bassNodes[i]+8, 0.15);
     bassSounds.push(s);   
-    s = new Sound(i/8, i/8 + 0.125, simDetune(square,0.1), bassNodes[i]-4, 0.15);
+    s = new Sound(i/8, i/8 + 0.125, simDetune(sine,0.1), bassNodes[i]-4, 0.15);
     bassSounds.push(s);
     
   }
@@ -86,6 +85,7 @@ function Track1() {
 
   t1.addSounds(synthSounds);
   t1.addSounds(bassSounds);
-  t1.addSounds(leadSounds); 
+  t1.addSounds([Organ(0, 4, 20, 0.15)])
+  //t1.addSounds(leadSounds); 
   return t1;
 }
